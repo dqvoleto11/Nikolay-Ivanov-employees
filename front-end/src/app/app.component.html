@@ -1,0 +1,55 @@
+<div class="container py-5">
+  <div class="card mx-auto" style="max-width:700px;">
+    <div class="card-body text-center">
+      <h2 class="card-title mb-4">Employee Collaboration</h2>
+      <input type="file" accept=".csv" class="form-control mb-3" (change)="onFileSelected($event)" />
+      <div *ngIf="fileName" class="mb-3 text-muted">Selected file: {{ fileName }}</div>
+      <button class="btn btn-primary mb-3" (click)="onProcess()" [disabled]="phase !== 'idle' || !selectedFile">{{
+        phase === 'idle' ? 'Process CSV' :
+        phase === 'upload' ? 'Uploading...' :
+        phase === 'processing' ? 'Processing...' :
+        'Done'
+        }}
+      </button>
+      <div *ngIf="phase === 'upload' || phase === 'processing'" class="mb-3">
+        <small>
+          {{ phase === 'upload' ? 'Uploading:' : 'Processing:' }} {{ progress }}%
+        </small>
+        <div class="progress">
+          <div class="progress-bar bg-info" role="progressbar"
+               [style.width.%]="progress"
+               aria-valuemin="0"
+               aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+      <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+      <div *ngIf="phase === 'done'" class="alert alert-info text-start">
+        <h5>Top Pair</h5>
+        <p><strong>Employee 1:</strong> {{ summary?.emp1 }}</p>
+        <p><strong>Employee 2:</strong> {{ summary?.emp2 }}</p>
+        <p><strong>Days Worked Together:</strong> {{ summary?.days }}</p>
+      </div>
+      <div *ngIf="phase === 'done' && details.length" class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead class="table-light">
+          <tr>
+            <th>Emp #1</th>
+            <th>Emp #2</th>
+            <th>Project ID</th>
+            <th>Days Worked</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let d of details">
+            <td>{{ d.emp1 }}</td>
+            <td>{{ d.emp2 }}</td>
+            <td>{{ d.projectId }}</td>
+            <td>{{ d.days }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
